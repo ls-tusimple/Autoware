@@ -1,4 +1,4 @@
-FROM nvidia/cuda:8.0-ubuntu14.04
+FROM nvidia/cuda:8.0-devel-ubuntu14.04
 MAINTAINER Yuki Iida <aiueo.0409@gmail.com>
 
 RUN apt-get update && apt-get install -y \
@@ -29,6 +29,10 @@ RUN apt-get install -y \
         libgoogle-perftools-dev \
         libeigen3-dev
 
+RUN apt-get install -y \
+        ros-indigo-velocity-controllers ros-indigo-grid-map libglew-dev \
+        ros-indigo-sicktoolbox ros-indigo-sicktoolbox-wrapper
+
 # Intall some basic GUI and sound libs
 RUN apt-get install -y \
                 xz-utils file locales dbus-x11 pulseaudio dmz-cursor-theme \
@@ -54,7 +58,7 @@ RUN wget https://github.com/opencv/opencv/archive/2.4.13.zip && \
     cd build/ && \
     cmake -D WITH_TBB=ON -D BUILD_NEW_PYTHON_SUPPORT=ON -D WITH_V4L=ON -D CUDA_GENERATION=Auto -D WITH_QT=ON -D WITH_OPENGL=ON -D WITH_VTK=ON .. && \
     make -j8 && \
-    make install 
+    make install
 ENV PKG_CONFIG_PATH $PKG_CONFIG_PATH:/usr/local/lib/pkgconfig
 
 # Add basic user
@@ -75,7 +79,7 @@ RUN echo "source /opt/ros/indigo/setup.bash" >> /home/$USERNAME/.bashrc && \
         #Fix for qt and X server errors
         echo "export QT_X11_NO_MITSHM=1" >> /home/$USERNAME/.bashrc && \
         # cd to home on login
-        echo "cd" >> /home/$USERNAME/.bashrc 
+        echo "cd" >> /home/$USERNAME/.bashrc
 
 # Change user
 USER autoware
